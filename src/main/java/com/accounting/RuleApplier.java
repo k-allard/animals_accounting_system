@@ -17,7 +17,7 @@ public class RuleApplier {
         for (String rule : rulesSet) {
             if (!rule.contains(" ")) {
                 result = applySingleRule(animal, rule);
-            } else if (rule.substring(0, 3).equals("НЕ ")) {
+            } else if (rule.startsWith("НЕ ")) {
                 result = !applySingleRule(animal, rule.substring(3));
             } else if (rule.contains(" ИЛИ ")) {
                 String[] twoRulesArray = rule.split(" ");
