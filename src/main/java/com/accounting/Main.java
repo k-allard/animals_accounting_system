@@ -5,11 +5,10 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalArgumentException {
         final ArrayList<List<String>> animals = CSVParser.parseFile("animals.csv");
         if (animals.isEmpty()) {
-            System.out.println("animals.csv: Нет животных");
-            System.exit(1);
+            throw new IllegalArgumentException("animals.csv file is empty");
         }
         ArrayList<List<String>> rules = CSVParser.parseFile("task.csv");
         for (List<String> ruleSet : rules) {

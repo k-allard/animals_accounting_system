@@ -12,7 +12,7 @@ public class RuleApplier {
         return false;
     }
 
-    static boolean applyRulesSet(List<String> animal, List<String> rulesSet) {
+    static boolean applyRulesSet(List<String> animal, List<String> rulesSet) throws IllegalArgumentException {
         boolean result = false;
         for (String rule : rulesSet) {
             if (!rule.contains(" ")) {
@@ -23,8 +23,7 @@ public class RuleApplier {
                 String[] twoRulesArray = rule.split(" ");
                 result = (applySingleRule(animal, twoRulesArray[0]) || applySingleRule(animal, twoRulesArray[2]));
             } else {
-                System.out.println("task.csv: Некорректное правило");
-                System.exit(1);
+                throw new IllegalArgumentException("task.csv: Некорректное правило :" + rule);
             }
             if (!result)
                 break;
