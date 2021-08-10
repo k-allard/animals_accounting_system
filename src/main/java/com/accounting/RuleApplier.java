@@ -4,7 +4,7 @@ import java.util.List;
 
 public class RuleApplier {
 
-    static boolean applySingleRule(List<String> animal, String rule) {
+    private static boolean applySingleRule(List<String> animal, String rule) {
         for (String animalFeature : animal) {
             if (animalFeature.equals(rule))
                 return true;
