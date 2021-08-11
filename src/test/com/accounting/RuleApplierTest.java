@@ -21,32 +21,25 @@ class RuleApplierTest {
 
     @Test
     void applyRulesSet_withNOT_TRUE() {
-        List<String> rulesSet = new ArrayList<>();
-        rulesSet.add("ПОЛОСАТОЕ");
-        rulesSet.add("НЕ ДЛИННОХВОСТОЕ");
-        assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
+        Rule rule = new Rule("ПОЛОСАТОЕ,НЕ ДЛИННОХВОСТОЕ");
+        assertTrue(RuleApplier.applyRulesSet(animal, rule));
     }
 
     @Test
     void applyRulesSet_withOR_withNOT() {
-        List<String> rulesSet = new ArrayList<>();
-        rulesSet.add("КОРОТКОХВОСТОЕ ИЛИ БЕСХВОСТОЕ");
-        rulesSet.add("НЕ СУХОПУТНОЕ");
-        assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
+        Rule rule = new Rule("КОРОТКОХВОСТОЕ ИЛИ БЕСХВОСТОЕ,НЕ СУХОПУТНОЕ");
+        assertTrue(RuleApplier.applyRulesSet(animal, rule));
     }
 
     @Test
     void applyRulesSet_withOR() {
-        List<String> rulesSet = new ArrayList<>();
-        rulesSet.add("ПОЛОСАТОЕ ИЛИ ОДНОТОННОЕ");
-        assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
+        Rule rule = new Rule("ПОЛОСАТОЕ ИЛИ ОДНОТОННОЕ");
+        assertTrue(RuleApplier.applyRulesSet(animal, rule));
     }
 
     @Test
     void applyRulesSet_withNOT_FALSE() {
-        List<String> rulesSet = new ArrayList<>();
-        rulesSet.add("ВОДОПЛАВАЮЩЕЕ");
-        rulesSet.add("НЕ ПОЛОСАТОЕ");
-        assertFalse(RuleApplier.applyRulesSet(animal, rulesSet));
+        Rule rule = new Rule("ВОДОПЛАВАЮЩЕЕ,НЕ ПОЛОСАТОЕ");
+        assertFalse(RuleApplier.applyRulesSet(animal, rule));
     }
 }
