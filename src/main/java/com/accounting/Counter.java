@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class Counter {
 
-    static Map<Integer, Integer> addMapToMap(Map<Integer, Integer> one, Map<Integer, Integer> two) {
+    private static Map<Integer, Integer> addMapToMap(Map<Integer, Integer> one, Map<Integer, Integer> two) {
         Map<Integer, Integer> res = new HashMap<>();
         for (Integer key1 : one.keySet()) {
             res.put(key1, one.get(key1) + two.get(key1));
@@ -18,7 +18,7 @@ public class Counter {
         return res;
     }
 
-    static Map<Integer, Integer> initMap(Map<Integer, Rule> rules) {
+    private static Map<Integer, Integer> initMap(Map<Integer, Rule> rules) {
         Map<Integer, Integer> res = new HashMap<>();
         for (Integer key : rules.keySet()) {
             res.put(key, 0);
