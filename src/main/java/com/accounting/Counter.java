@@ -10,34 +10,32 @@ import java.util.concurrent.Executors;
 
 public class AnimalCounter {
 
-    private static final int THREADPOOLSIZE = 6;
-
-    static class CounterThread implements Runnable {
-        private Map<Integer, Integer> result;
-        Map<Integer, Rule> rules;
-        ArrayList<List<String>> animals;
-
-        public CounterThread(Map<Integer, Rule> rules, ArrayList<List<String>> animals) {
-            this.rules = rules;
-            this.animals = animals;
-            result = new HashMap<>();
-        }
-
-        public void run() {
-            for (Integer ruleId : rules.keySet()) {
-                int res = 0;
-                for (List<String> animal : animals) {
-                    if (RuleApplier.applyRulesSet(animal, rules.get(ruleId)))
-                        res++;
-                }
-                result.put(ruleId, res);
-            }
-        }
-
-        public Map<Integer, Integer> getResult() {
-            return this.result;
-        }
-    }
+//    static class CounterThread implements Runnable {
+//        private Map<Integer, Integer> result;
+//        Map<Integer, Rule> rules;
+//        ArrayList<List<String>> animals;
+//
+//        public CounterThread(Map<Integer, Rule> rules, ArrayList<List<String>> animals) {
+//            this.rules = rules;
+//            this.animals = animals;
+//            result = new HashMap<>();
+//        }
+//
+//        public void run() {
+//            for (Integer ruleId : rules.keySet()) {
+//                int res = 0;
+//                for (List<String> animal : animals) {
+//                    if (RuleApplier.applyRulesSet(animal, rules.get(ruleId)))
+//                        res++;
+//                }
+//                result.put(ruleId, res);
+//            }
+//        }
+//
+//        public Map<Integer, Integer> getResult() {
+//            return this.result;
+//        }
+//    }
 
     static Map<Integer, Integer> addMapToMap(Map<Integer, Integer> one, Map<Integer, Integer> two) {
         Map<Integer, Integer> res = new HashMap<>();
@@ -55,18 +53,19 @@ public class AnimalCounter {
         return res;
     }
 
-    static void countAnimals(String fileName, Map<Integer, Rule> rules) throws IOException {
+    static Map<Integer, Integer> countAnimals(String fileName, Map<Integer, Rule> rules,
+                                              int threadPoolSize, int maxNumOfLines) throws IOException {
         Map<Integer, Integer> result = initMap(rules);
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            ArrayList<List<String>> animals = FileParser.getLinesFromFile(br);
+            ArrayList<List<String>> animals = FileParser.getLinesFromFile(br, maxNumOfLines);
             while (!animals.isEmpty()) {
-                ExecutorService executor = Executors.newFixedThreadPool(THREADPOOLSIZE);
+                ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
                 ConcurrentLinkedQueue<CounterThread> threads = new ConcurrentLinkedQueue<>();
-                while (threads.size() < THREADPOOLSIZE && !animals.isEmpty()) {
+                while (threads.size() < threadPoolSize && !animals.isEmpty()) {
                     CounterThread thread = new CounterThread(rules, animals);
                     threads.add(thread);
                     executor.execute(thread);
-                    animals = FileParser.getLinesFromFile(br);
+                    animals = FileParser.getLinesFromFile(br, maxNumOfLines);
                 }
                 executor.shutdown();
                 while (!executor.isTerminated()) { }
@@ -77,8 +76,6 @@ public class AnimalCounter {
                 }
             }
         }
-        for (Integer id : rules.keySet()) {
-            System.out.println(id + ". Правилу " + rules.get(id).rule + " соответствует " + result.get(id) + " животных");
-        }
+        return result;
     }
 }
