@@ -12,9 +12,9 @@ public class RuleApplier {
         return false;
     }
 
-    static boolean applyRulesSet(List<String> animal, List<String> rulesSet) throws IllegalArgumentException {
+    static boolean applyRulesSet(List<String> animal, Rule ruleObj) throws IllegalArgumentException {
         boolean result = false;
-        for (String rule : rulesSet) {
+        for (String rule : ruleObj.ruleLine) {
             if (!rule.contains(" ")) {
                 result = applySingleRule(animal, rule);
             } else if (rule.startsWith("НЕ ")) {
