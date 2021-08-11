@@ -55,7 +55,7 @@ public class AnimalCounter {
         return res;
     }
 
-    static void parseAndCountAnimals(String fileName, Map<Integer, Rule> rules) throws IOException {
+    static void countAnimals(String fileName, Map<Integer, Rule> rules) throws IOException {
         Map<Integer, Integer> result = initMap(rules);
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             ArrayList<List<String>> animals = FileParser.getLinesFromFile(br);
