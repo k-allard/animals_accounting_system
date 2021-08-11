@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RuleApplierTest {
 
     private static final List<String> animal = new ArrayList<>();
-    private static List<String> rulesSet = new ArrayList<>();
 
     @BeforeAll
     static void init() {
@@ -21,18 +20,31 @@ class RuleApplierTest {
     }
 
     @Test
-    void applyRulesSet() {
+    void applyRulesSet_withNOT_TRUE() {
+        List<String> rulesSet = new ArrayList<>();
         rulesSet.add("ПОЛОСАТОЕ");
-        rulesSet.add("НЕ КОРОТКОХВОСТОЕ");
-        assertFalse(RuleApplier.applyRulesSet(animal, rulesSet));
-        rulesSet.clear();
+        rulesSet.add("НЕ ДЛИННОХВОСТОЕ");
+        assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
+    }
+
+    @Test
+    void applyRulesSet_withOR_withNOT() {
+        List<String> rulesSet = new ArrayList<>();
         rulesSet.add("КОРОТКОХВОСТОЕ ИЛИ БЕСХВОСТОЕ");
         rulesSet.add("НЕ СУХОПУТНОЕ");
         assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
-        rulesSet.clear();
+    }
+
+    @Test
+    void applyRulesSet_withOR() {
+        List<String> rulesSet = new ArrayList<>();
         rulesSet.add("ПОЛОСАТОЕ ИЛИ ОДНОТОННОЕ");
         assertTrue(RuleApplier.applyRulesSet(animal, rulesSet));
-        rulesSet.clear();
+    }
+
+    @Test
+    void applyRulesSet_withNOT_FALSE() {
+        List<String> rulesSet = new ArrayList<>();
         rulesSet.add("ВОДОПЛАВАЮЩЕЕ");
         rulesSet.add("НЕ ПОЛОСАТОЕ");
         assertFalse(RuleApplier.applyRulesSet(animal, rulesSet));
