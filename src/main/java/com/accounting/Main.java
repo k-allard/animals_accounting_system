@@ -11,8 +11,9 @@ public class Main {
     public static void main(String[] args) throws IllegalArgumentException, IOException {
         Map<Integer, Rule> rules = FileParser.parseRuleFile("task.csv");
         Map<Integer, Integer> result = Counter.countAnimals("animals.csv", rules, THREADPOOLSIZE, MAXLINE);
-        for (Integer id : rules.keySet()) {
-            System.out.println(id + ". Правилу " + rules.get(id).rule + " соответствует " + result.get(id) + " животных");
+        for (Map.Entry<Integer, Rule> ruleEntry: rules.entrySet()) {
+            System.out.println(ruleEntry.getKey() + ". Правилу " + ruleEntry.getValue().rule +
+                    " соответствует " + result.get(ruleEntry.getKey()) + " животных");
         }
     }
 }
