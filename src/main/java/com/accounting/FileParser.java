@@ -1,31 +1,32 @@
 package com.accounting;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.List;
 
 public class FileParser {
 
-    static Map<Integer, Rule> parseRuleFile(String fileName) throws IOException {
-        Map<Integer, Rule> result = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            int id = 1;
-            while ((line = br.readLine()) != null) {
-                result.put(id, new Rule(line));
-                id++;
+    static List<Rule> parseRuleFile(String fileName) throws IOException {
+        List<Rule> ruleList = new ArrayList<>();
+        try (
+                FileReader fileReader = new FileReader(fileName);
+                BufferedReader br = new BufferedReader(fileReader)
+        ) {
+            while (br.ready()) {
+                ruleList.add(new Rule(br.readLine()));
             }
         }
-        return result;
+        return ruleList;
     }
 
-    static ArrayList<List<String>> getLinesFromFile(BufferedReader br, int maxNumOfLines) throws IOException {
+    static List<List<String>> getLinesFromFile(BufferedReader br, int maxNumOfLines) throws IOException {
         int i = 0;
-        String line;
-        ArrayList<List<String>> result = new ArrayList<>();
-        while (i < maxNumOfLines && (line = br.readLine()) != null) {
-            result.add(Arrays.asList(line.split(",")));
+        List<List<String>> result = new ArrayList<>();
+        while (i < maxNumOfLines && br.ready()) {
+            result.add(Arrays.asList(br.readLine().split(",")));
             i++;
         }
         return result;

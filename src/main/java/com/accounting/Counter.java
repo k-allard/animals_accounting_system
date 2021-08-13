@@ -1,36 +1,43 @@
 package com.accounting;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileReader;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Counter {
 
-    private static Map<Integer, Integer> addMapToMap(Map<Integer, Integer> one, Map<Integer, Integer> two) {
-        Map<Integer, Integer> res = new HashMap<>();
-        for (Integer key1 : one.keySet()) {
-            res.put(key1, one.get(key1) + two.get(key1));
+    private static Map<Rule, Integer> addMapToMap(Map<Rule, Integer> one, Map<Rule, Integer> two) {
+        Map<Rule, Integer> overallResult = new HashMap<>();
+        for (Map.Entry<Rule, Integer> oneResult : one.entrySet()) {
+            Rule keyRule = oneResult.getKey();
+            overallResult.put(keyRule, one.get(keyRule) + two.get(keyRule));
+        }
+        return overallResult;
+    }
+
+    private static Map<Rule, Integer> initMap(List<Rule> rules) {
+        Map<Rule, Integer> res = new HashMap<>();
+        for (Rule rule : rules) {
+            res.put(rule, 0);
         }
         return res;
     }
 
-    private static Map<Integer, Integer> initMap(Map<Integer, Rule> rules) {
-        Map<Integer, Integer> res = new HashMap<>();
-        for (Integer key : rules.keySet()) {
-            res.put(key, 0);
-        }
-        return res;
-    }
-
-    static Map<Integer, Integer> countAnimals(String fileName, Map<Integer, Rule> rules,
-                                              int threadPoolSize, int maxNumOfLines) throws IOException {
-        Map<Integer, Integer> result = initMap(rules);
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            ArrayList<List<String>> animals = FileParser.getLinesFromFile(br, maxNumOfLines);
+    static Map<Rule, Integer> countAnimals(
+            String fileName, List<Rule> rules, int threadPoolSize, int maxNumOfLines
+    ) throws IOException {
+        Map<Rule, Integer> result = initMap(rules);
+        try (
+                FileReader fileReader = new FileReader(fileName);
+                BufferedReader br = new BufferedReader(fileReader)
+        ) {
+            List<List<String>> animals = FileParser.getLinesFromFile(br, maxNumOfLines);
             while (!animals.isEmpty()) {
                 ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
                 ConcurrentLinkedQueue<CounterThread> threads = new ConcurrentLinkedQueue<>();
@@ -44,7 +51,7 @@ public class Counter {
                 while (!executor.isTerminated()) { }
                 while (threads.size() > 0) {
                     CounterThread thread = threads.poll();
-                    Map<Integer, Integer> res = thread.getResult();
+                    Map<Rule, Integer> res = thread.getResult();
                     result = addMapToMap(result, res);
                 }
             }

@@ -1,33 +1,32 @@
 package com.accounting;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CounterThread implements Runnable {
-    private Map<Integer, Integer> result;
-    Map<Integer, Rule> rules;
-    ArrayList<List<String>> animals;
+    private final Map<Rule, Integer> result;
+    private final List<Rule> rules;
+    private final List<List<String>> animals;
 
-    public CounterThread(Map<Integer, Rule> rules, ArrayList<List<String>> animals) {
+    public CounterThread(List<Rule> rules, List<List<String>> animals) {
         this.rules = rules;
         this.animals = animals;
         result = new HashMap<>();
     }
 
     public void run() {
-        for (Integer ruleId : rules.keySet()) {
+        for (Rule rule : rules) {
             int res = 0;
             for (List<String> animal : animals) {
-                if (RuleApplier.applyRulesSet(animal, rules.get(ruleId)))
+                if (RuleApplier.applyRulesToAnimal(animal, rule))
                     res++;
             }
-            result.put(ruleId, res);
+            result.put(rule, res);
         }
     }
 
-    public Map<Integer, Integer> getResult() {
-        return this.result;
+    public Map<Rule, Integer> getResult() {
+        return result;
     }
 }
